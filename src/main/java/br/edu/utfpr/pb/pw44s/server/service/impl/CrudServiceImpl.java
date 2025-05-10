@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class CrudServiceImpl<T, ID extends Serializable>
         implements ICrudService<T, ID> {
@@ -43,8 +44,8 @@ public abstract class CrudServiceImpl<T, ID extends Serializable>
         getRepository().flush();
     }
     @Override
-    public T findOne(ID id) {
-        return getRepository().findById(id).orElse(null);
+    public Optional<T> findById(ID id) {
+        return getRepository().findById(id);
     }
     @Override
     public boolean exists(ID id) {

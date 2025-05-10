@@ -1,23 +1,17 @@
 package br.edu.utfpr.pb.pw44s.server.controller;
 
-import br.edu.utfpr.pb.pw44s.server.error.ApiError;
 import br.edu.utfpr.pb.pw44s.server.model.Category;
 import br.edu.utfpr.pb.pw44s.server.service.ICategoryService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("categories")
@@ -30,7 +24,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<Category> save(@RequestBody @Valid  Category category) {
+    public ResponseEntity<Category> save(@RequestBody @Valid Category category) {
         categoryService.save(category);
         return ResponseEntity.status(HttpStatus.CREATED).body(category);
     }
@@ -44,25 +38,29 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<List<Category>> findAll() {
         return ResponseEntity
-                .status(HttpStatus.OK).body(categoryService.findAll());
+                .status(HttpStatus.OK)
+                .body(categoryService.findAll());
     }
 
-    // http://localhost:8080/categories/1
-    // http://localhost:8080/categories?id=1
     @GetMapping("{id}")
     public ResponseEntity<Category> findById(@PathVariable Long id) {
-        Category category = categoryService.findById(id);
-        if (category != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(category);
-        } else {
-            return ResponseEntity.noContent().build();
-        }
+        return categoryService.findById(id)
+                .map(category -> ResponseEntity.status(HttpStatus.OK).body(category))
+                .orElse(ResponseEntity.noContent().build());
     }
 
     @DeleteMapping("{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable Long id) {
-        categoryService.delete(categoryService.findById(id));
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        Optional<Category> categoryOptional = categoryService.findById(id); // Recebe um Optional
+        if (categoryOptional.isPresent()) {
+            categoryService.delete(id);  // Passa o id para o delete
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Categoria deletada com sucesso.");
+        } else {
+            // Se a categoria não for encontrada, retornamos um erro 404
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Categoria não encontrada para o id: " + id);
+        }
     }
 
     @GetMapping("count")
@@ -74,7 +72,7 @@ public class CategoryController {
     public ResponseEntity<Boolean> exists(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(categoryService.exists(id));
     }
-    //http://localhost:8080/categories/page?page=1&size=5
+
     @GetMapping("page")
     public ResponseEntity<Page<Category>> findPage(@RequestParam int page,
                                                    @RequestParam int size,
@@ -85,8 +83,7 @@ public class CategoryController {
             pageRequest = PageRequest.of(page, size,
                     asc ? Sort.Direction.ASC : Sort.Direction.DESC, order);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(
-                categoryService.findAll(pageRequest));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(categoryService.findAll(pageRequest));
     }
-
 }

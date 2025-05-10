@@ -55,7 +55,7 @@ public abstract class CrudController <T, D, ID extends Serializable> {
     }
     @GetMapping("{id}")
     public ResponseEntity<D> findOne(@PathVariable ID id) {
-        T entity = getService().findOne(id);
+        T entity = (T) getService().findById(id);
         if ( entity != null) {
             return ResponseEntity.ok(convertToDto(entity));
         } else {

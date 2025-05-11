@@ -24,6 +24,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Getter
     @NotNull
     @Size(min = 4)
     private String displayName; // Atributo displayName
@@ -74,7 +75,4 @@ public class User implements UserDetails {
         return this.username;
     }
 
-    public String getDisplayName() {
-        return this.displayName;
-    }
 }

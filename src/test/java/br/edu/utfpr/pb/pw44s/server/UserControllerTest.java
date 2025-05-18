@@ -96,4 +96,5 @@ public class UserControllerTest {
 
         return user;
     }
+
 }

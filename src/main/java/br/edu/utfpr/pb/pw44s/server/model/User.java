@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,21 +12,15 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "tb_user")
-@Setter
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter
     @NotNull
     @Size(min = 4)
-    private String displayName; // Atributo displayName
+    private String displayName;
 
     @NotNull(message = "O campo 'username' não pode ser nulo.")
     @Size(min = 4)
@@ -38,6 +31,89 @@ public class User implements UserDetails {
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$", message = "{br.edu.utfpr.pb.pw44s.server.senha}")
     private String password;
 
+    // === Construtores ===
+    public User() {
+    }
+
+    public User(Long id, String displayName, String username, String password) {
+        this.id = id;
+        this.displayName = displayName;
+        this.username = username;
+        this.password = password;
+    }
+
+    // === Builder manual ===
+    public static class Builder {
+        private Long id;
+        private String displayName;
+        private String username;
+        private String password;
+
+        public Builder id(Long id) {
+            this.id = id;
+            return this;
+        }
+
+        public Builder displayName(String displayName) {
+            this.displayName = displayName;
+            return this;
+        }
+
+        public Builder username(String username) {
+            this.username = username;
+            return this;
+        }
+
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+
+        public User build() {
+            return new User(id, displayName, username, password);
+        }
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    // === Getters e Setters ===
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    // === Métodos do UserDetails ===
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return AuthorityUtils.createAuthorityList("ROLE_USER");
@@ -62,17 +138,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-    // Implementação do método getPassword()
-    @Override
-    public String getPassword() {
-        return this.password;
-    }
-
-    // Implementação do método getUsername()
-    @Override
-    public String getUsername() {
-        return this.username;
-    }
-
 }

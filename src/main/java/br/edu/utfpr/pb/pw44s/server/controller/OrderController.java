@@ -46,5 +46,5 @@ public class OrderController {
         orderService.delete(id);
     }
 
-    // Você pode adicionar mais endpoints, como atualizar pedidos, etc.
+    //adicionar mais endpoints, como atualizar pedidos, mais pra frente no trab.
 }

@@ -6,15 +6,12 @@ import br.edu.utfpr.pb.pw44s.server.security.dto.UserResponseDTO;
 import br.edu.utfpr.pb.pw44s.server.service.AuthService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.fasterxml.jackson.core.exc.StreamReadException;
-import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.NoArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import jakarta.servlet.FilterChain;
@@ -37,22 +34,17 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            //Ao realizar um HTTP.POST com o conteúdno no formato JSON: {"username":"admin", "password":"P4ssword"}
-            //Obtém os dados de username e password utilizando o ObjectMapper para converter o JSON //em um objeto User com esses dados.  User credentials = new User();
-            User user = new User();
-            //Verifica se o usuário existe no banco de dados, caso não exista uma Exception será disparada
-            //e o código será parado de executar nessa parte e o usuário irá receber uma resposta
-            //com falha na autenticação (classe: EntryPointUnauthorizedHandler)
-            User credentials = new User();
-            if (request.getInputStream() != null && request.getInputStream().available() > 0) {
-                credentials = new ObjectMapper().readValue(request.getInputStream(), User.class);
-                user = (User) authService.loadUserByUsername(credentials.getUsername());
-            }
-            //Caso o usuário seja encontrado, o objeto authenticationManager encarrega-se de autenticá-lo.
-		    /* Como o authenticationManager foi configurado na classe WebSecurity e, foi informado o método
-			  de criptografia da senha, a senha informada durante a autenticação é criptografada e
-			  comparada com a senha armazenada no banco. Caso não esteja correta uma Exception será
-			  disparada Caso ocorra sucesso será chamado o método: successfulAuthentication dessa classe */
+            // Lê os dados de username e password
+            User credentials = new ObjectMapper().readValue(request.getInputStream(), User.class);
+
+            // Log para verificar os dados recebidos
+            System.out.println("Autenticando usuário: " + credentials.getUsername());
+
+            // Verifica se o usuário existe no banco de dados
+            User user = (User) authService.loadUserByUsername(credentials.getUsername());
+            System.out.println("Usuário encontrado: " + user.getUsername());
+
+            // Tenta autenticar o usuário
             return authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             credentials.getUsername(),
@@ -60,35 +52,40 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                             user.getAuthorities()
                     )
             );
-        } catch (StreamReadException e) {
-            throw new RuntimeException(e);
-        } catch (DatabindException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("Erro ao ler os dados da requisição: " + e.getMessage());
+            throw new RuntimeException("Erro ao ler os dados da requisição", e);
+        } catch (AuthenticationException e) {
+            System.out.println("Erro de autenticação: " + e.getMessage());
+            throw new RuntimeException("Erro de autenticação", e);
         }
     }
 
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        User user = (User) authService.loadUserByUsername(authResult.getName());
-        // o método create() da classe JWT é utilizado para criação de um novo token JWT
-        String token = JWT.create()
-                .withSubject(authResult.getName()) // o objeto authResult possui os dados do usuário autenticado, nesse caso o método getName() retorna o username do usuário foi autenticado no método attemptAuthentication.
-                //a data de validade do token é a data atual mais o valor armazenado na constante EXPIRATION_TIME, nesse caso 1 dia
-                .withExpiresAt( new Date(System.currentTimeMillis()  + SecurityConstants.EXPIRATION_TIME) )
-                //Por fim é informado o algoritmo utilizado para assinar o token e por parâmetro a chave utilizada para assinatura. O Secret também pode ser alterado na classe SecurityConstants que armazena alguns dados de configuração do Spring Security
-                .sign(Algorithm.HMAC512(SecurityConstants.SECRET));
-        response.setContentType("application/json");
-        response.getWriter().write(
-                new ObjectMapper().writeValueAsString(
-                        new AuthenticationResponse(token, new UserResponseDTO(user)))
-        );
+        try {
+            User user = (User) authService.loadUserByUsername(authResult.getName());
 
-    }
+            // Log para sucesso na autenticação
+            System.out.println("Autenticação bem-sucedida para: " + user.getUsername());
 
-    @Override
-    protected AuthenticationSuccessHandler getSuccessHandler() {
-        return super.getSuccessHandler();
+            // Cria o token JWT
+            String token = JWT.create()
+                    .withSubject(authResult.getName())
+                    .withExpiresAt(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
+                    .sign(Algorithm.HMAC512(SecurityConstants.SECRET));
+
+            // Define o token no header Authorization
+            response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+
+            // Opcionalmente, retorna o token no corpo da resposta
+            response.setContentType("application/json");
+            response.getWriter().write(
+                    new ObjectMapper().writeValueAsString(
+                            new AuthenticationResponse(token, new UserResponseDTO(user)))
+            );
+        } catch (Exception e) {
+            System.out.println("Erro ao gerar o token ou na autenticação: " + e.getMessage());
+        }
     }
 }

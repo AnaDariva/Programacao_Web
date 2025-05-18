@@ -1,7 +1,6 @@
 package br.edu.utfpr.pb.pw44s.server.security;
 
 import br.edu.utfpr.pb.pw44s.server.service.AuthService;
-import lombok.SneakyThrows;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -37,8 +36,7 @@ public class WebSecurity {
     }
 
     @Bean
-    @SneakyThrows
-    public SecurityFilterChain filterChain(HttpSecurity http) {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
         authenticationManagerBuilder.userDetailsService(authService).passwordEncoder(passwordEncoder());
@@ -52,7 +50,10 @@ public class WebSecurity {
 
         http.authorizeHttpRequests(authorize -> authorize
                 // 🔓 Libera a criação de novos usuários
+                .requestMatchers(antMatcher(HttpMethod.POST, "/users")).permitAll()
                 .requestMatchers(antMatcher(HttpMethod.POST, "/users/**")).permitAll()
+                // 🔓 Libera o login
+                .requestMatchers(antMatcher(HttpMethod.POST, "/login")).permitAll()
                 // 🔓 Libera o acesso à listagem de produtos e categorias
                 .requestMatchers(antMatcher(HttpMethod.GET, "/produtos/**")).permitAll()
                 .requestMatchers(antMatcher(HttpMethod.GET, "/categorias/**")).permitAll()
@@ -88,5 +89,3 @@ public class WebSecurity {
         return source;
     }
 }
-
-//No trabalho: liberar as rotas de produtos e categorias

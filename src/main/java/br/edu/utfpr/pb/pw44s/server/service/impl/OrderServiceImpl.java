@@ -22,5 +22,4 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Long> implements IO
         return orderRepository;
     }
 
-
 }

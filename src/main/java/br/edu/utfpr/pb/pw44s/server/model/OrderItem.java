@@ -1,5 +1,6 @@
 package br.edu.utfpr.pb.pw44s.server.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import java.math.BigDecimal;
@@ -24,6 +25,7 @@ public class OrderItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;

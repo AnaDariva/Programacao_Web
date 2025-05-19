@@ -113,6 +113,10 @@ public class User implements UserDetails {
         this.password = password;
     }
 
+    @OneToMany(mappedBy = "user")
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    private java.util.List<Order> orders;
+
     // === Métodos do UserDetails ===
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

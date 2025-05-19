@@ -19,27 +19,27 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    // Criar um novo pedido
+    //criar um novo pedido
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Order createOrder(@Valid @RequestBody Order order) {
         return orderService.save(order);
     }
 
-    // Listar todos os pedidos
+    //listar todos os pedidos
     @GetMapping
     public List<Order> getAllOrders() {
         return orderService.findAll();
     }
 
-    // Buscar pedido por ID
+    //buscar pedido por ID
     @GetMapping("/{id}")
     public Order getOrderById(@PathVariable Long id) {
         Optional<Order> order = orderService.findById(id);
         return order.orElseThrow(() -> new RuntimeException("Pedido não encontrado"));
     }
 
-    // Deletar um pedido por ID
+    //deletar um pedido por ID
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteOrder(@PathVariable Long id) {

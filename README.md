@@ -34,7 +34,6 @@
   <img src="https://www.svgrepo.com/show/331760/h2.svg" alt="H2 Database" width="40" height="40"/>
 </div>
 
-
 ---
 
 ## 📌 Descrição do Projeto
@@ -99,7 +98,7 @@ A aplicação é uma **plataforma de compras online** completa, onde os usuário
 
 ## 🗄️ Banco de Dados
 
-O projeto utiliza **H2 Database**, que é executado em memória durante o tempo de execução. O console H2 pode ser acessado em:
+O projeto utiliza **H2 Database**, que é executado em memória durante o tempo de execução. 
 
 ---
 

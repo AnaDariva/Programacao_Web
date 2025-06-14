@@ -1,19 +1,19 @@
 export interface IUserRegister {
-    displayName: string;
-    username: string;
-    password: string;
+  displayName: string;
+  username: string;
+  password: string;
 }
 
 export interface IResponse {
-    status?: number;
-    success?: boolean;
-    message?: string;
-    data?: object
+  status?: number;
+  success?: boolean;
+  message?: string;
+  data?: object;
 }
 
 export interface IUserLogin {
-    username: string;
-    password: string;
+  username: string;
+  password: string;
 }
 
 export interface Authorities {
@@ -31,9 +31,9 @@ export interface AuthenticationResponse {
   user: AuthenticatedUser;
 }
 
-export  interface  ICategory {
-    id?:  number;
-    name:  string;
+export interface ICategory {
+  id?: number;
+  name: string;
 }
 
 //...
@@ -45,4 +45,5 @@ export interface IProduct {
   category: ICategory;
   imageName?: string;
   contentType?: string;
+  imageUrl?: string;
 }

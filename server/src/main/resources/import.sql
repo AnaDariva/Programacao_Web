@@ -7,7 +7,6 @@ insert into tb_category (name) values ('Bonés');
 insert into tb_category (name) values ('Acessórios');
 
 -- Produtos (Exemplos de itens por categoria e time)
--- Adicione a coluna 'image_url' e forneça uma URL para cada produto
 insert into tb_product (name, description, price, category_id, image_url) values ('Regata Lakers LeBron James', 'Regata oficial do LeBron James - Los Angeles Lakers', 499.90, 1, 'https://acdn-us.mitiendanube.com/stores/001/986/628/products/camiseta-los-angeles-lakers-lebron-james-jordan-swingman-roxo-11-d55f8deff31cd88d4616438476414223-640-0.jpg');
 insert into tb_product (name, description, price, category_id, image_url) values ('Regata Golden State Curry', 'Regata oficial do Stephen Curry - Golden State Warriors', 499.90, 1, 'https://acdn-us.mitiendanube.com/stores/001/226/115/products/regata-nba-nike-swingman-golden-state-warriors-branca-curry-301-0bd1a035f1fb21fdad15913954396439-640-0.jpg');
 insert into tb_product (name, description, price, category_id, image_url) values ('Moletom Boston Celtics', 'Moletom verde oficial do Boston Celtics', 279.90, 2, 'https://cdn.awsli.com.br/2500x2500/59/59657/produto/57875474/610b01c669.jpg');

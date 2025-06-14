@@ -26,4 +26,7 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
+
+    // NOVO CAMPO PARA A URL DA IMAGEM
+    private String imageUrl; // Adicione esta linha
 }

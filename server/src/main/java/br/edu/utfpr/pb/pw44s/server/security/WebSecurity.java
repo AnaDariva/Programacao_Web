@@ -51,12 +51,16 @@ public class WebSecurity {
         http.authorizeHttpRequests(authorize -> authorize
                 // 🔓 Libera a criação de novos usuários
                 .requestMatchers(antMatcher(HttpMethod.POST, "/users")).permitAll()
-                .requestMatchers(antMatcher(HttpMethod.POST, "/users/**")).permitAll()
+                .requestMatchers(antMatcher(HttpMethod.POST, "/users/**")).permitAll() // Caso haja sub-rotas para users
                 // 🔓 Libera o login
                 .requestMatchers(antMatcher(HttpMethod.POST, "/login")).permitAll()
-                // 🔓 Libera o acesso à listagem de produtos e categorias
-                .requestMatchers(antMatcher(HttpMethod.GET, "/produtos/**")).permitAll()
-                .requestMatchers(antMatcher(HttpMethod.GET, "/categorias/**")).permitAll()
+                // 🔓 Libera o acesso à listagem de produtos e categorias (AGORA COM OS NOMES CORRETOS!)
+                .requestMatchers(antMatcher(HttpMethod.GET, "/products")).permitAll() // Listar todos os produtos
+                .requestMatchers(antMatcher(HttpMethod.GET, "/products/**")).permitAll() // Acessar produto por ID, etc.
+                .requestMatchers(antMatcher(HttpMethod.GET, "/categories")).permitAll() // Listar todas as categorias
+                .requestMatchers(antMatcher(HttpMethod.GET, "/categories/**")).permitAll() // Acessar categoria por ID, etc.
+                // 🔓 Libera recursos estáticos (se você tiver imagens locais no futuro)
+                .requestMatchers(antMatcher(HttpMethod.GET, "/images/**")).permitAll() // Ex: http://localhost:8080/images/nome.png
                 // 🔓 Libera o H2 e páginas de erro
                 .requestMatchers(antMatcher("/h2-console/**")).permitAll()
                 .requestMatchers(antMatcher("/error/**")).permitAll()

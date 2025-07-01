@@ -8,12 +8,12 @@ import App from "@/App.tsx";
 import { PrimeReactProvider } from "primereact/api";
 import { BrowserRouter } from "react-router-dom";
 
-import { CartProvider } from "@/context/CartContext"; // <-- Adicione esta linha
+import { CartProvider } from "@/context/CartContext"; 
 
-import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
-import "primereact/resources/primereact.min.css"; //core css
-import "primeicons/primeicons.css"; //icons
-import "primeflex/primeflex.css"; //flex utilities
+import "primereact/resources/themes/lara-light-indigo/theme.css"; 
+import "primereact/resources/primereact.min.css"; 
+import "primeicons/primeicons.css"; 
+import "primeflex/primeflex.css"; 
 import { AuthProvider } from "@/context/AuthContext";
 
 const themeId = "theme-link";

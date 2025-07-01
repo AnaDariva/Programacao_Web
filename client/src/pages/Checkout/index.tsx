@@ -9,7 +9,7 @@ import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import { calculateShipping } from "@/services/shippingService";
 import { getMyAddresses } from "@/services/address-service";
-import type { IAddress } from "@/commons/types"; // CERTO!
+import type { IAddress } from "@/commons/types"; 
 import type { IPaymentMethod } from "@/commons/types";
 
 export const CheckoutPage: React.FC = () => {

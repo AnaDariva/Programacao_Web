@@ -9,7 +9,6 @@ import { ProductView } from "@/pages/product-view";
 import { CartPage } from "@/pages/Cart";
 import { CheckoutPage } from "@/pages/Checkout";
 import { OrderHistoryPage } from "@/pages/OrderHistory";
-// 👇 Importe a nova página de produtos!
 import { ProductListPage } from "@/pages/product-list";
 
 export function AppRoutes() {

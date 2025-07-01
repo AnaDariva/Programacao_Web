@@ -1,4 +1,4 @@
-import { createContext, useEffect, useState } from "react"; // <-- CORREÇÃO AQUI
+import { createContext, useEffect, useState } from "react"; 
 import type { ReactNode } from "react";
 import type {
   AuthenticatedUser,
@@ -27,19 +27,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // NOVO: Ler token como string pura
+    
     const storedToken = localStorage.getItem("token");
     const storedUser = localStorage.getItem("user");
 
     if (storedUser && storedToken) {
-      setAuthenticatedUser(JSON.parse(storedUser)); // User ainda é um JSON, fazemos parse
+      setAuthenticatedUser(JSON.parse(storedUser)); 
       setAuthenticated(true);
-      // NOVO: Usar o token como string pura aqui
+     
       api.defaults.headers.common["Authorization"] = `Bearer ${storedToken}`;
       console.log(
         "AuthContext: Token lido do localStorage (PURO):",
         storedToken
-      ); // <-- Log para depuração
+      ); 
       navigate("/");
     }
   }, []);

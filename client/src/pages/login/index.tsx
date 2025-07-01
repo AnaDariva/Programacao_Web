@@ -1,14 +1,15 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import type { AuthenticationResponse, IUserLogin } from "@/commons/types";
 import AuthService from "@/services/auth-service";
 import { Toast } from "primereact/toast";
 import { useAuth } from "@/context/hooks/use-auth";
+import { classNames } from "primereact/utils";
 
 export const LoginPage = () => {
   const {
@@ -17,19 +18,27 @@ export const LoginPage = () => {
     formState: { errors, isSubmitting },
   } = useForm<IUserLogin>({ defaultValues: { username: "", password: "" } });
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { login } = AuthService;
   const toast = useRef<Toast>(null);
   const [loading, setLoading] = useState(false);
 
-  const { handleLogin } = useAuth();
+  const { handleLogin, authenticated } = useAuth();
+
+  useEffect(() => {
+    if (authenticated) {
+      const redirectPath = searchParams.get("redirect") || "/";
+      navigate(redirectPath, { replace: true });
+    }
+  }, [authenticated, navigate, searchParams]);
 
   const onSubmit = async (userLogin: IUserLogin) => {
     setLoading(true);
     try {
       const response = await login(userLogin);
       if (response.status === 200 && response.data) {
-        const authenticationResponse = response.data as AuthenticationResponse; // Define o objeto com token após a autenticação
-        handleLogin(authenticationResponse); // o contexto é atualizado com os dados da autenticação
+        const authenticationResponse = response.data as AuthenticationResponse;
+        handleLogin(authenticationResponse);
 
         toast.current?.show({
           severity: "success",
@@ -37,28 +46,36 @@ export const LoginPage = () => {
           detail: "Login efetuado com sucesso.",
           life: 3000,
         });
+
+        const redirectPath = searchParams.get("redirect") || "/";
         setTimeout(() => {
-          navigate("/");
+          navigate(redirectPath, { replace: true });
         }, 1000);
       } else {
         toast.current?.show({
           severity: "error",
           summary: "Erro",
-          detail: "Falha ao efetuar login.",
+          detail:
+            response.message ||
+            "Falha ao efetuar login. Verifique suas credenciais.",
           life: 3000,
         });
       }
-    } catch {
+    } catch (error: any) {
+      console.error("Erro no login:", error);
       toast.current?.show({
         severity: "error",
         summary: "Erro",
-        detail: "Falha ao efetuar login.",
+        detail:
+          error.response?.data?.message ||
+          "Falha ao efetuar login. Verifique sua conexão ou credenciais.",
         life: 3000,
       });
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <div className="flex justify-content-center align-items-center min-h-screen p-4">
       <Toast ref={toast} />
@@ -69,17 +86,26 @@ export const LoginPage = () => {
         >
           <div>
             <label htmlFor="username" className="block mb-2">
-              Usuário
+              E-mail
             </label>
             <Controller
               name="username"
               control={control}
-              rules={{ required: "Informe o nome de usuário" }}
+              rules={{
+                required: "Informe o e-mail",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                  message: "E-mail inválido",
+                },
+              }}
               render={({ field }) => (
                 <InputText
                   id="username"
                   {...field}
-                  className={errors.username ? "p-invalid w-full" : "w-full"}
+                  className={classNames("w-full", {
+                    "p-invalid": errors.username,
+                  })}
+                  placeholder="seu.email@exemplo.com"
                 />
               )}
             />
@@ -101,7 +127,9 @@ export const LoginPage = () => {
                   {...field}
                   toggleMask
                   feedback={false}
-                  className={errors.password ? "p-invalid w-full" : "w-full"}
+                  className={classNames("w-full", {
+                    "p-invalid": errors.password,
+                  })}
                   inputClassName="w-full"
                 />
               )}

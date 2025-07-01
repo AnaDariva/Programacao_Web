@@ -10,13 +10,13 @@ import { useCart } from "@/context/CartContext"; // Importe o hook useCart
 
 const TopMenu: React.FC = () => {
   const navigate = useNavigate();
-  // TODO: Substituir 'user@email.com' pelo nome de usuário real do AuthContext
+  
   const user = "user@email.com";
   const [darkMode, setDarkMode] = useState<boolean>(() => {
     return localStorage.getItem("theme") === "dark";
   });
   const { authenticated, handleLogout } = useAuth();
-  const { getTotalItems } = useCart(); // Use o hook useCart para obter a contagem de itens
+  const { getTotalItems } = useCart(); 
 
   useEffect(() => {
     const themeLink = document.getElementById("theme-link") as HTMLLinkElement;
@@ -31,60 +31,28 @@ const TopMenu: React.FC = () => {
     navigate("/login");
   };
 
-  // Definição dos itens do menu principal
+  
   const items: MenuItem[] = [
-    { label: "Home", icon: "pi pi-home", command: () => navigate("/") },
-    // Link para o carrinho, visível para todos os usuários
-    {
-      label: `Carrinho (${getTotalItems()})`, // Exibe a contagem de itens
-      icon: "pi pi-shopping-cart",
-      command: () => navigate("/cart"),
-      className: "p-overlay-badge", // Classe para estilização de badge, se você tiver CSS customizado para isso
-    },
-  ];
+  { label: "Home", icon: "pi pi-home", command: () => navigate("/") },
+  {
+    label: "Produtos",
+    icon: "pi pi-shopping-bag",
+    command: () => navigate("/products"),
+  },
+  {
+    label: `Carrinho (${getTotalItems()})`,
+    icon: "pi pi-shopping-cart",
+    command: () => navigate("/cart"),
+    className: "p-overlay-badge",
+  },
+];
 
-  // Adicionar itens de administração apenas se o usuário estiver autenticado
-  if (authenticated) {
-    items.push(
-      {
-        label: "Categorias",
-        icon: "pi pi-box",
-        items: [
-          {
-            label: "Listar",
-            icon: "pi pi-list",
-            command: () => navigate("/categories"),
-          },
-          {
-            label: "Novo",
-            icon: "pi pi-plus",
-            command: () => navigate("/categories/new"),
-          },
-        ],
-      },
-      {
-        label: "Produtos",
-        icon: "pi pi-box",
-        items: [
-          {
-            label: "Listar",
-            icon: "pi pi-list",
-            command: () => navigate("/products"),
-          },
-          {
-            label: "Novo",
-            icon: "pi pi-plus",
-            command: () => navigate("/products/new"),
-          },
-          {
-            label: "View", // Nota: Essa rota "/products/view" pode ser desnecessária no contexto de e-commerce para o cliente final, a navegação para detalhes já ocorre via "/products/:id"
-            icon: "pi pi-search",
-            command: () => navigate("/products/view"),
-          },
-        ],
-      },
-    );
-  }
+  
+ if (authenticated) {
+  items.push(
+    { label: "Meus Pedidos", icon: "pi pi-receipt", command: () => navigate("/orders") }
+  );
+}
 
   const start = (
     <div
@@ -125,11 +93,11 @@ const TopMenu: React.FC = () => {
         />
       </div>
 
-      {authenticated && (
+      {authenticated ? ( 
         <>
-          <span className="font-semibold hidden sm:block">{user}</span>
+          <span className="font-semibold hidden sm:block">{user}</span> 
           <Avatar
-            image="https://api.dicebear.com/9.x/bottts-neutral/svg?seed=Caleb"
+            image="https://as2.ftcdn.net/jpg/03/49/49/79/1000_F_349497933_Ly4im8BDmHLaLzgyKg2f2yZOvJjBtlw5.jpg"
             shape="square"
           />
           <Button
@@ -138,6 +106,21 @@ const TopMenu: React.FC = () => {
             onClick={handleLogoutClick}
           />
         </>
+      ) : ( 
+        <div className="flex gap-2">
+          <Button
+            label="Login"
+            icon="pi pi-user"
+            className="p-button-text"
+            onClick={() => navigate("/login")}
+          />
+          <Button
+            label="Registrar"
+            icon="pi pi-user-plus"
+            className="p-button-secondary p-button-text"
+            onClick={() => navigate("/register")}
+          />
+        </div>
       )}
     </div>
   );

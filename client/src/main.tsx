@@ -8,7 +8,6 @@ import App from "@/App.tsx";
 import { PrimeReactProvider } from "primereact/api";
 import { BrowserRouter } from "react-router-dom";
 
-// Importar o CartProvider
 import { CartProvider } from "@/context/CartContext"; // <-- Adicione esta linha
 
 import "primereact/resources/themes/lara-light-indigo/theme.css"; //theme
@@ -19,14 +18,13 @@ import { AuthProvider } from "@/context/AuthContext";
 
 const themeId = "theme-link";
 const themeHref =
-"https://unpkg.com/primereact/resources/themes/lara-light-blue/theme.css";
+  "https://unpkg.com/primereact/resources/themes/lara-light-blue/theme.css";
 const link = document.createElement("link");
 link.id = themeId;
 link.rel = "stylesheet";
 link.href = themeHref;
 document.head.appendChild(link);
 
-// ...existing code...
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
@@ -40,4 +38,3 @@ createRoot(document.getElementById("root")!).render(
     </BrowserRouter>
   </StrictMode>
 );
-// ...existing code...

@@ -6,7 +6,7 @@ import { Card } from "primereact/card";
 import { Link, useNavigate } from "react-router-dom";
 import { classNames } from "primereact/utils";
 import { useRef, useState } from "react";
-import type { IUserRegister } from "@/commons/types";
+import type { IUserRegister } from "@/commons/types"; // Importar com 'type'
 import AuthService from "@/services/auth-service";
 import { Toast } from "primereact/toast";
 
@@ -17,14 +17,13 @@ export const RegisterPage = () => {
     formState: { errors, isSubmitting },
   } = useForm<IUserRegister>({
     defaultValues: { username: "", password: "", displayName: "" },
-  }); // Formulário controlado com React Hook Form
-  const { signup } = AuthService; // Método no authService que realiza uma requisição HTTP POST para /users na API
-  const [loading, setLoading] = useState(false); // Objeto que controla o estado da requisição HTTP
-  const navigate = useNavigate(); // Hook do React Touter para redirecionar o usuário para uma nova rota
-  const toast = useRef<Toast>(null); // Hook para possibilitar o uso do componente Toast para exibir as mensagens de sucesso ou erro.
+  });
+  const { signup } = AuthService;
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const toast = useRef<Toast>(null);
 
   const onSubmit = async (data: IUserRegister) => {
-    // Função assíncrona para realizar o envio dos dados para API
     setLoading(true);
     try {
       const response = await signup(data);
@@ -32,7 +31,7 @@ export const RegisterPage = () => {
         toast.current?.show({
           severity: "success",
           summary: "Sucesso",
-          detail: "Usuário cadastrado com sucesso.",
+          detail: "Usuário cadastrado com sucesso. Faça login para continuar.",
           life: 3000,
         });
         setTimeout(() => {
@@ -42,37 +41,50 @@ export const RegisterPage = () => {
         toast.current?.show({
           severity: "error",
           summary: "Erro",
-          detail: "Falha ao cadastrar usuário.",
+          detail:
+            response.message || "Falha ao cadastrar usuário. Tente novamente.",
           life: 3000,
         });
       }
-    } catch {
+    } catch (error: any) {
+      console.error("Erro no cadastro:", error);
       toast.current?.show({
         severity: "error",
         summary: "Erro",
-        detail: "Falha ao cadastrar usuário.",
+        detail:
+          error.response?.data?.message ||
+          "Ocorreu um erro ao tentar cadastrar. Verifique sua conexão.",
         life: 3000,
       });
     } finally {
       setLoading(false);
     }
   };
+
   return (
-    <div className="flex justify-center items-start pt-30 px-4 bg-gray-100 dark:bg-gray-900">
+    <div className="flex justify-content-center align-items-center min-h-screen p-4 bg-gray-100 dark:bg-gray-900">
       <Toast ref={toast} />
-      <Card title="Registrar Conta" className="w-full max-w-md">
-        <form onSubmit={handleSubmit(onSubmit)} className="p-fluid space-y-4">
+      <Card title="Registrar Conta" className="w-full sm:w-20rem shadow-2">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-column gap-3"
+        >
           <div>
-            <label className="block mb-2">Nome de Exibição</label>
+            <label htmlFor="displayName" className="block mb-2">
+              Nome de Exibição
+            </label>
             <Controller
               name="displayName"
               control={control}
-              rules={{ required: "Campo obrigatório" }}
+              rules={{ required: "Nome de exibição é obrigatório" }}
               render={({ field }) => (
                 <InputText
+                  id="displayName"
                   {...field}
-                  className={classNames({ "p-invalid": errors.displayName })}
-                  placeholder="Ex: Dany Foguinho"
+                  className={classNames("w-full", {
+                    "p-invalid": errors.displayName,
+                  })}
+                  placeholder="Seu Nome Completo ou Apelido"
                 />
               )}
             />
@@ -81,16 +93,27 @@ export const RegisterPage = () => {
             )}
           </div>
           <div>
-            <label className="block mb-2">Usuário</label>
+            <label htmlFor="username" className="block mb-2">
+              E-mail
+            </label>
             <Controller
               name="username"
               control={control}
-              rules={{ required: "Campo obrigatório" }}
+              rules={{
+                required: "E-mail é obrigatório",
+                pattern: {
+                  value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                  message: "E-mail inválido",
+                },
+              }}
               render={({ field }) => (
                 <InputText
+                  id="username"
                   {...field}
-                  className={classNames({ "p-invalid": errors.username })}
-                  placeholder="Ex: Daenerys Targaryen"
+                  className={classNames("w-full", {
+                    "p-invalid": errors.username,
+                  })}
+                  placeholder="seu.email@exemplo.com"
                 />
               )}
             />
@@ -99,20 +122,34 @@ export const RegisterPage = () => {
             )}
           </div>
           <div>
-            <label className="block mb-2">Senha</label>
+            <label htmlFor="password" className="block mb-2">
+              Senha
+            </label>
             <Controller
               name="password"
               control={control}
               rules={{
-                required: "Campo obrigatório",
-                minLength: { value: 6, message: "Mínimo 6 caracteres" },
+                required: "Senha é obrigatória",
+                minLength: {
+                  value: 6,
+                  message: "A senha deve ter no mínimo 6 caracteres",
+                },
+                pattern: {
+                  value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).*$/,
+                  message:
+                    "A senha deve conter ao menos uma letra maiúscula, uma minúscula e um número.",
+                },
               }}
               render={({ field }) => (
                 <Password
+                  id="password"
                   {...field}
                   toggleMask
                   feedback={false}
-                  className={classNames({ "p-invalid": errors.password })}
+                  className={classNames("w-full", {
+                    "p-invalid": errors.password,
+                  })}
+                  inputClassName="w-full"
                 />
               )}
             />

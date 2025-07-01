@@ -31,9 +31,7 @@ export const ProductFormPage = () => {
 
   const isEdit = !!id;
 
-  // Simula carregamento de categorias e, se for edição, do produto
   useEffect(() => {
-    // Simula fetch categorias
     const loadCategories = async () => {
       const response = await findAll();
       if (response.data && Array.isArray(response.data)) {
@@ -45,8 +43,7 @@ export const ProductFormPage = () => {
     loadCategories();
 
     loadProduct();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id]); // Adiciona id como dependência para recarregar o produto se o id mudar
+  }, [id]);
 
   const loadProduct = async () => {
     if (isEdit) {

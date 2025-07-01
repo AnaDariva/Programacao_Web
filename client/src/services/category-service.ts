@@ -1,14 +1,8 @@
 import type { ICategory, IResponse } from "@/commons/types";
 import { api } from "@/lib/axios";
 
-// URL base para as requisições de categoria
 const categoryURL = "/categories";
 
-/**
- * Função para salvar uma categoria
- * @param category - Dados da categoria que será salva
- * @returns - Retorna uma Promise com a resposta da API
- **/
 const save = async (category: ICategory): Promise<IResponse> => {
   let response = {} as IResponse;
   try {
@@ -30,11 +24,6 @@ const save = async (category: ICategory): Promise<IResponse> => {
   return response;
 };
 
-/**
- * Função para buscar todas as categorias
- * @returns - Retorna uma Promise com a resposta da API
- * com a lista de categorias
- **/
 const findAll = async (): Promise<IResponse> => {
   let response = {} as IResponse;
   try {
@@ -56,11 +45,6 @@ const findAll = async (): Promise<IResponse> => {
   return response;
 };
 
-/**
- * Função para remover uma categoria
- * @param id - Recebe o id da categoria que será removida
- * @returns - Retorna uma Promise com a resposta da API
- */
 const remove = async (id: number): Promise<IResponse> => {
   let response = {} as IResponse;
   try {
@@ -82,11 +66,6 @@ const remove = async (id: number): Promise<IResponse> => {
   return response;
 };
 
-/**
- * Função para buscar uma categoria pelo id
- * @param id - Recebe o id da categoria que será buscada
- * @returns - Retorna uma Promise com a resposta da API
- */
 const findById = async (id: number): Promise<IResponse> => {
   let response = {} as IResponse;
   try {
@@ -108,7 +87,6 @@ const findById = async (id: number): Promise<IResponse> => {
   return response;
 };
 
-// Objeto que exporta todas as funções
 const CategoryService = {
   save,
   findAll,

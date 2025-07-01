@@ -36,7 +36,7 @@ export interface ICategory {
   name: string;
 }
 
-//...
+
 export interface IProduct {
   id?: number;
   name: string;
@@ -46,4 +46,51 @@ export interface IProduct {
   imageName?: string;
   contentType?: string;
   imageUrl?: string;
+}
+export interface IAddress {
+    id?: number;
+    street: string;
+    number: string;
+    complement?: string;
+    neighborhood: string;
+    city: string;
+    state: string;
+    zipCode: string;
+}
+
+export interface IPaymentMethod {
+    id: number;
+  type: string;
+  details: string;
+}
+
+export interface IOrderItem {
+    productId: number;
+    productName: string;
+    quantity: number;
+    price: number; 
+    imageUrl?: string; 
+}
+
+
+
+
+export interface IOrderItem {
+    productId: number;
+    quantity: number;
+    price: number; 
+    productName: string; 
+    productImageUrl?: string; 
+}
+
+
+export interface IOrder {
+    id?: number;
+    userId?: number; 
+    orderDate: string;
+    totalAmount: number;
+    status: string;
+    items: IOrderItem[];
+    shippingAddress: IAddress;
+    paymentMethod: IPaymentMethod;
 }

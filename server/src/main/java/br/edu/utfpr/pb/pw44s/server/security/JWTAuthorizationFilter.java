@@ -43,7 +43,7 @@ public class JWTAuthorizationFilter extends BasicAuthenticationFilter {
             return;
         }
 
-        // Tenta obter a autenticação a partir do token
+
         UsernamePasswordAuthenticationToken authenticationToken = getAuthentication(request);
 
         // Se a autenticação foi obtida (token válido), define no contexto de segurança

@@ -18,7 +18,7 @@ public class OrderItemServiceImpl implements IOrderItemService {
     @Autowired
     private OrderItemRepository orderItemRepository;
 
-    // Implementando os métodos de ICrudService que nao estao funcionando;
+
     @Override
     public List<OrderItem> findAll() {
         return orderItemRepository.findAll();
@@ -84,7 +84,6 @@ public class OrderItemServiceImpl implements IOrderItemService {
         orderItemRepository.deleteAll();
     }
 
-    // Implementação do método específico de OrderItem
     @Override
     public List<OrderItem> findByOrderId(Long orderId) {
         return orderItemRepository.findByOrderId(orderId);

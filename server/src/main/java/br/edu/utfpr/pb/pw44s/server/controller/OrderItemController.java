@@ -14,8 +14,6 @@ public class OrderItemController {
     @Autowired
     private IOrderItemService orderItemService;
 
-    // Outros métodos
-
     @GetMapping("/order/{orderId}")
     public List<OrderItem> getOrderItemsByOrderId(@PathVariable Long orderId) {
         return orderItemService.findByOrderId(orderId);

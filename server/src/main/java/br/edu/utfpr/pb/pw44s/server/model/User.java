@@ -117,7 +117,6 @@ public class User implements UserDetails {
     @com.fasterxml.jackson.annotation.JsonIgnore
     private java.util.List<Order> orders;
 
-    // === Métodos do UserDetails ===
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return AuthorityUtils.createAuthorityList("ROLE_USER");

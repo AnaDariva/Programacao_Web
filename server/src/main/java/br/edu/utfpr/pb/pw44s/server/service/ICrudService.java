@@ -16,8 +16,7 @@ public interface ICrudService<T, ID extends Serializable> {
 
     Page<T> findAll(Pageable pageable);
 
-    Optional<T> findById(ID id); // <- Adicionado!
-
+    Optional<T> findById(ID id);
     T save(T entity);
 
     T saveAndFlush(T entity);
@@ -26,7 +25,6 @@ public interface ICrudService<T, ID extends Serializable> {
 
     void flush();
 
-    // T findOne(ID id);
 
     boolean exists(ID id);
 

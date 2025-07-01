@@ -57,7 +57,7 @@ public class CategoryController {
             categoryService.delete(id);  // Passa o id para o delete
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Categoria deletada com sucesso.");
         } else {
-            // Se a categoria não for encontrada, retornamos um erro 404
+            // categoria não encontrada, erro 404
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Categoria não encontrada para o id: " + id);
         }

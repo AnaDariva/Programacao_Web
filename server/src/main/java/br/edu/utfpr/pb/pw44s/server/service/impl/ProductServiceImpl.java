@@ -13,7 +13,6 @@ public class ProductServiceImpl extends CrudServiceImpl<Product, Long> implement
     private final ProductRepository productRepository;
 
     public ProductServiceImpl(ProductRepository productRepository) {
-        // Remova ou comente esta linha: super(productRepository);
         this.productRepository = productRepository;
     }
 
@@ -22,7 +21,6 @@ public class ProductServiceImpl extends CrudServiceImpl<Product, Long> implement
         return this.productRepository;
     }
 
-    // NOVO MÉTODO IMPLEMENTADO: delega para o repositório
     @Override
     public List<Product> findByCategoryId(Long categoryId) {
         return productRepository.findByCategoryId(categoryId);

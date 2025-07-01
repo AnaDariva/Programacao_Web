@@ -23,11 +23,11 @@ public class UserDTO {
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).*$")
     private String password;
 
-    // Construtor padrão
+
     public UserDTO() {
     }
 
-    // Construtor a partir de User
+
     public UserDTO(User user) {
         this.id = user.getId();
         this.displayName = user.getDisplayName();
@@ -35,7 +35,7 @@ public class UserDTO {
         this.password = user.getPassword();
     }
 
-    // Getters e Setters
+
     public Long getId() {
         return id;
     }

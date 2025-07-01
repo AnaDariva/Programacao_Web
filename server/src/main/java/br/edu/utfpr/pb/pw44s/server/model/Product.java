@@ -19,6 +19,7 @@ public class Product {
 
     private String name;
 
+    @Column(length = 2000)
     private String description;
 
     private BigDecimal price;
@@ -27,6 +28,6 @@ public class Product {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-    // NOVO CAMPO PARA A URL DA IMAGEM
-    private String imageUrl; // Adicione esta linha
+    @Column(length = 512)
+    private String imageUrl;
 }

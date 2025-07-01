@@ -23,8 +23,7 @@ public class AuthController {
 
     @GetMapping("user-info")
     public UserDTO getUserInfo(Principal principal) {
-        // String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        // ou
+
         String username = principal.getName();
         return modelMapper.map(authService.loadUserByUsername(username), UserDTO.class);
     }

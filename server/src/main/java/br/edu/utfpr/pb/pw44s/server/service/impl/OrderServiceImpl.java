@@ -6,11 +6,13 @@ import br.edu.utfpr.pb.pw44s.server.model.User;
 import br.edu.utfpr.pb.pw44s.server.repository.OrderRepository;
 import br.edu.utfpr.pb.pw44s.server.service.AuthService;
 import br.edu.utfpr.pb.pw44s.server.service.IOrderService;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class OrderServiceImpl extends CrudServiceImpl<Order, Long> implements IOrderService {
@@ -24,30 +26,66 @@ public class OrderServiceImpl extends CrudServiceImpl<Order, Long> implements IO
     }
 
     @Override
-    protected OrderRepository getRepository() {
-        return orderRepository;
+    protected JpaRepository<Order, Long> getRepository() {
+        return this.orderRepository;
     }
 
     @Override
     public Order save(Order order) {
-        // Define o usuário autenticado como dono do pedido
+
         User user = authService.getAuthenticatedUser();
         order.setUser(user);
 
-        // Define a data/hora do pedido
-        order.setOrderDate(LocalDateTime.now());
 
-        // Calcula o total somando unitPrice * quantity de cada item
-        BigDecimal total = BigDecimal.ZERO;
-        for (OrderItem item : order.getItems()) {
-            BigDecimal quantity = BigDecimal.valueOf(item.getQuantity());
-            BigDecimal itemTotal = item.getUnitPrice().multiply(quantity);
-            total = total.add(itemTotal);
-            // Também relaciona o item com o pedido
-            item.setOrder(order);
+        if (order.getOrderDate() == null) {
+            order.setOrderDate(LocalDateTime.now());
         }
-        order.setTotal(total.setScale(2, RoundingMode.HALF_UP));
 
-        return orderRepository.save(order);
+
+        if (order.getStatus() == null || order.getStatus().isEmpty()) {
+            order.setStatus("PENDING");
+        }
+
+
+        BigDecimal total = BigDecimal.ZERO;
+        if (order.getItems() != null) {
+            for (OrderItem item : order.getItems()) {
+
+                BigDecimal unitPrice = item.getUnitPrice() != null ? item.getUnitPrice() : BigDecimal.ZERO;
+                BigDecimal quantity = BigDecimal.valueOf(item.getQuantity() != null ? item.getQuantity() : 0);
+
+                BigDecimal itemTotal = unitPrice.multiply(quantity);
+                total = total.add(itemTotal);
+
+                item.setOrder(order);
+
+
+                if (item.getProduct() != null) {
+                    item.setProductName(item.getProduct().getName());
+                    item.setProductImageUrl(item.getProduct().getImageUrl());
+                } else {
+                    item.setProductName(item.getProductName() != null ? item.getProductName() : "Produto Desconhecido");
+                    item.setProductImageUrl(item.getProductImageUrl() != null ? item.getProductImageUrl() : "");
+                }
+            }
+        }
+        order.setTotalAmount(total.setScale(2, RoundingMode.HALF_UP));
+
+        if (order.getShippingAddressStreet() == null) order.setShippingAddressStreet("");
+        if (order.getShippingAddressNumber() == null) order.setShippingAddressNumber("");
+        if (order.getShippingAddressNeighborhood() == null) order.setShippingAddressNeighborhood("");
+        if (order.getShippingAddressCity() == null) order.setShippingAddressCity("");
+        if (order.getShippingAddressState() == null) order.setShippingAddressState("");
+        if (order.getShippingAddressZipCode() == null) order.setShippingAddressZipCode("");
+        if (order.getPaymentMethodType() == null) order.setPaymentMethodType("");
+        if (order.getPaymentMethodDetails() == null) order.setPaymentMethodDetails("");
+
+
+        return getRepository().save(order);
+    }
+
+    @Override
+    public List<Order> findByUserId(Long userId) {
+        return orderRepository.findByUserId(userId);
     }
 }

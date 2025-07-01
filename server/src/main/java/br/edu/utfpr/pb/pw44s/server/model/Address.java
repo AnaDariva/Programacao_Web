@@ -13,6 +13,14 @@ public class Address {
     @NotBlank(message = "A rua é obrigatória.")
     private String street;
 
+    @NotBlank(message = "O número é obrigatório.")
+    private String number;
+
+    private String complement;
+
+    @NotBlank(message = "O bairro é obrigatório.")
+    private String neighborhood;
+
     @NotBlank(message = "A cidade é obrigatória.")
     private String city;
 
@@ -25,7 +33,6 @@ public class Address {
     @ManyToOne(optional = false)
     private User user;
 
-    // Getters e Setters
 
     public Long getId() {
         return id;
@@ -41,6 +48,30 @@ public class Address {
 
     public void setStreet(String street) {
         this.street = street;
+    }
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
+    public String getComplement() {
+        return complement;
+    }
+
+    public void setComplement(String complement) {
+        this.complement = complement;
+    }
+
+    public String getNeighborhood() {
+        return neighborhood;
+    }
+
+    public void setNeighborhood(String neighborhood) {
+        this.neighborhood = neighborhood;
     }
 
     public String getCity() {

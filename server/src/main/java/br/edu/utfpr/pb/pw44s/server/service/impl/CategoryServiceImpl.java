@@ -23,7 +23,6 @@ public class CategoryServiceImpl extends CrudServiceImpl<Category, Long>
         return this.categoryRepository;
     }
 
-    // Implementação do findById usando Optional
     @Override
     public Optional<Category> findById(Long id) {
         return categoryRepository.findById(id);

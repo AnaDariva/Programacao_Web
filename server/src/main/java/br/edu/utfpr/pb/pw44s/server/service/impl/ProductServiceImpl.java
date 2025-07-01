@@ -6,7 +6,7 @@ import br.edu.utfpr.pb.pw44s.server.service.IProductService;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.List; // Adicionar este import
+import java.util.List;
 
 @Service
 public class ProductServiceImpl extends CrudServiceImpl<Product, Long> implements IProductService {

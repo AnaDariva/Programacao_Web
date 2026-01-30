@@ -1,6 +1,6 @@
 package br.edu.utfpr.pb.pw44s.server.error;
 
-import lombok.Getter
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 

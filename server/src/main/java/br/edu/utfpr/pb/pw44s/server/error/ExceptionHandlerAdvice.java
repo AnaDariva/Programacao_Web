@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.HashMap;
-import java.util.Map
+import java.util.Map;
 
 @RestControllerAdvice
 public class ExceptionHandlerAdvice {

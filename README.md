@@ -1,7 +1,5 @@
 # 🛒 E-Commerce Web - Projeto Final
 
-teste
-
 **Aplicação de Comércio Eletrônico** desenvolvida como projeto final da disciplina de **Programação para Web**.
 
 📁 O projeto é dividido em dois módulos principais:  

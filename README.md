@@ -85,5 +85,5 @@ O projeto utiliza H2 Database, que é executado em memória durante o tempo de e
 ## 👩‍💻 Autor
 **Ana Luísa Dariva Ramos** - Acadêmica de Análise e Desenvolvimento de Sistemas na UTFPR-PB
 
-
+---
 

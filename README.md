@@ -78,7 +78,7 @@ A aplicação é uma **plataforma de compras online** completa, onde os usuário
 ---
 
 ### 🗄️ Banco de Dados
-O projeto utiliza H2 Database, que é executado em memória durante o tempo de execução.
+O projeto utiliza H2 Database, que é executado em memória durante o tempo de execução
 
 ---
 
